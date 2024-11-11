@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 // Create
 app.post('/microservico', (req, res) => {
-    const url = 'https://localhost:8080/api/users'; 
+    const url = 'http://localhost:3000/api/users'; 
 
     axios.post(url, req.body)
       .then(response => {
@@ -20,7 +20,7 @@ app.post('/microservico', (req, res) => {
 });
 
 app.post('/function', (req, res) => {
-    const url = 'https://funccloudjs.azurewebsites.net/api/criarAtividade'; 
+    const url = 'https://funccloudjs.azurewebsites.net/api/criarAtividade';
 
     axios.post(url, req.body)
       .then(response => {
@@ -31,9 +31,9 @@ app.post('/function', (req, res) => {
       });
 });
 
-// Read All 
+// Read All
 app.get('/microservico', (req, res) => {
-    let url = 'https://localhost:8080/api/users'; 
+    const url = 'http://localhost:3000/api/users';  
 
     axios.get(url)
     .then(response => {
@@ -45,7 +45,7 @@ app.get('/microservico', (req, res) => {
 });
 
 app.get('/function', (req, res) => {
-  let url = 'https://funccloudjs.azurewebsites.net/api/consultarAtividade'; 
+  const url = 'https://funccloudjs.azurewebsites.net/api/consultarAtividade';
 
   axios.get(url)
     .then(response => {
@@ -58,8 +58,8 @@ app.get('/function', (req, res) => {
 
 // Update
 app.put('/microservico/:id', (req, res) => {
-  const id = req.params.id;
-  const url = `https://localhost:8080/api/users/${id}`;
+  const { id } = req.params;
+  const url = `http://localhost:3000/api/users/${id}`;
 
   axios.put(url, req.body)
     .then(response => {
@@ -70,36 +70,36 @@ app.put('/microservico/:id', (req, res) => {
     });
 });
 
-app.put('/function', (req, res) => {
-  const { id, title } = req.params.id;
-  const url = `https://funccloudjs.azurewebsites.net/api/atualizarAtividade?Id=${id},@Title=${title}`; 
+app.put('/function/:id/:title', (req, res) => {
+  const { id, title } = req.params;
+  const url = `https://funccloudjs.azurewebsites.net/api/atualizarAtividade?Id=${id}&Title=${title}`;
 
   axios.put(url, req.body)
-  .then(response => {
-    res.json(response.data);
-  })
-  .catch(error => {
-    res.status(500).send(error.message);
-  });
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      res.status(500).send(error.message);
+    });
 });
 
 // Delete
 app.delete('/microservico/:id', (req, res) => {
   const { id } = req.params;
-  const url = `https://localhost:8080/api/users/${id}`; 
+  const url = `http://localhost:3000/api/users/${id}`;
 
   axios.delete(url)
-  .then(response => {
-    res.json(response.data);
-  })
-  .catch(error => {
-    res.status(500).send(error.message);
-  });
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      res.status(500).send(error.message);
+    });
 });
 
-app.delete('/function', (req, res) => {
-    const { id } = req.params;
-  const url = `https://funccloudjs.azurewebsites.net/api/deletarAtividade?${id}`;
+app.delete('/function/:id', (req, res) => {
+  const { id } = req.params;
+  const url = `https://funccloudjs.azurewebsites.net/api/deletarAtividade?id=${id}`;
 
   axios.delete(url)
     .then(response => {
@@ -110,7 +110,8 @@ app.delete('/function', (req, res) => {
     });
 });
 
-const PORT = 3000;
+// Start server
+const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
